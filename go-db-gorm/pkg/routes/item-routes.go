@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"fmt"
 	"go-db-gorm/pkg/controllers"
 
 	"github.com/gin-gonic/gin"
@@ -13,4 +14,8 @@ var RegisterItemRoutes = func(c *gin.Engine) {
 	c.POST("/item/", controllers.CreateItem)
 	c.PUT("/item/{itemId}", controllers.UpdateItem)
 	c.DELETE("/item/{itemId}", controllers.DeleteItem)
+}
+
+func init() {
+	fmt.Println("Initializing routes...")
 }

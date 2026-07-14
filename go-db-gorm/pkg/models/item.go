@@ -2,6 +2,7 @@ package models
 
 import (
 	"database/sql"
+	"fmt"
 	"go-db-gorm/pkg/config"
 	"time"
 
@@ -29,6 +30,7 @@ type TodoItem struct {
 }
 
 func init() {
+	fmt.Println("Initializing entities...")
 	config.CreateDBConnection()
 	db := config.GetDB()
 	db.AutoMigrate(&TodoItem{})

@@ -15,6 +15,10 @@ import (
 
 var NewItem models.TodoItem
 
+func init() {
+	fmt.Println("Configuring context...")
+}
+
 func GetAllTodoItems(c *gin.Context) {
 	newItems := models.GetAllTodoItems()
 	res, _ := json.Marshal(newItems)

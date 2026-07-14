@@ -44,3 +44,7 @@ func CreateDBConnection() error {
 func GetDB() *gorm.DB {
 	return db
 }
+
+func init() {
+	fmt.Println("Configuring connections...")
+}
