@@ -88,11 +88,9 @@ func UpdateTodoItemDetails(existingItem *TodoItem, updatedItem *TodoItem) {
 		existingItem.DueAt = updatedItem.DueAt
 	}
 
-	if updatedItem.CreatedAt != existingItem.CreatedAt {
-		existingItem.CreatedAt = updatedItem.CreatedAt
-	}
-
 	if updatedItem.IsDone != existingItem.IsDone {
 		existingItem.IsDone = updatedItem.IsDone
 	}
+
+	existingItem.UpdatedAt = time.Now()
 }
