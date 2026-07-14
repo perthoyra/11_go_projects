@@ -43,10 +43,14 @@ func (item *TodoItem) CreateTodoItem() *TodoItem {
 	return item
 }
 
-func GetAllTodoItems() []TodoItem {
+func GetAllTodoItems() ([]TodoItem, error) {
 	var Items []TodoItem
-	db.Find(&Items)
-	return Items
+	res := db.Find(&Items)
+
+	if res.Error != nil {
+		return nil, res.Error
+	}
+	return Items, nil
 }
 
 func GetTodoItemById(Id int64) *TodoItem {

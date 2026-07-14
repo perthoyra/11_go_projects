@@ -20,7 +20,19 @@ func init() {
 }
 
 func GetAllTodoItems(c *gin.Context) {
-	newItems := models.GetAllTodoItems()
+	var newItems []models.TodoItem
+
+	newItems, err := models.GetAllTodoItems()
+
+	if err != nil {
+		c.IndentedJSON(http.StatusNoContent, "No rows in result")
+		c.JSON(200, gin.H{
+			"items": newItems,
+		})
+
+		return
+	}
+
 	res, _ := json.Marshal(newItems)
 
 	c.IndentedJSON(http.StatusOK, res)

@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"go-db-gorm/pkg/routes"
-	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -19,6 +18,6 @@ func main() {
 
 	fmt.Println("Listening on :9090...")
 	// Does it matter whihc one we use?
-	log.Fatal(http.ListenAndServe("localhost:9090", r))
-	// r.Run("localhost:9090")
+	// log.Fatal(http.ListenAndServe("localhost:9090", r))
+	r.Run("localhost:9090")
 }

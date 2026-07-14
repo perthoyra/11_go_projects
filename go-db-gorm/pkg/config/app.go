@@ -12,10 +12,10 @@ import (
 var db *gorm.DB
 
 func CreateDBConnection() error {
-	dbUsername := "root"
-	dbPassword := "root"
-	dbName := "TodoItems"
-	dbHost := "localhost"
+	dbUsername := "todouser"
+	dbPassword := "todouser"
+	dbName := "TodoDB"
+	dbHost := "192.168.50.57"
 	dbPort := "3306"
 
 	// dbUsername := getEnv("DB_USERNAME", "root")
