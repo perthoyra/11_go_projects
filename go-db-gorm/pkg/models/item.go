@@ -29,6 +29,7 @@ type TodoItem struct {
 }
 
 func init() {
+	config.CreateDBConnection()
 	db := config.GetDB()
 	db.AutoMigrate(&TodoItem{})
 }

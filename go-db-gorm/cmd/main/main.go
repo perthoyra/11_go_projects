@@ -1,4 +1,4 @@
-package godbgorm
+package main
 
 import (
 	"fmt"
