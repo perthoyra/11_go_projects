@@ -63,11 +63,15 @@ func UpdateTodoItem(Id int64, updatedItem *TodoItem) *TodoItem {
 	// // Get the item from the DB
 	itemDetails := GetTodoItemById(Id)
 
-	UpdateTodoItemDetails(itemDetails, updatedItem)
+	if itemDetails != nil {
+		UpdateTodoItemDetails(itemDetails, updatedItem)
 
-	db.Save(&itemDetails)
+		db.Save(&itemDetails)
 
-	return itemDetails
+		return itemDetails
+	}
+
+	return nil
 }
 
 func UpdateTodoItemDetails(existingItem *TodoItem, updatedItem *TodoItem) {

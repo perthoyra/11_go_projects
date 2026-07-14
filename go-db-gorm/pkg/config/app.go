@@ -14,7 +14,7 @@ var db *gorm.DB
 func CreateDBConnection() error {
 	dbUsername := "root"
 	dbPassword := "root"
-	dbName := "gorm"
+	dbName := "TodoItems"
 	dbHost := "localhost"
 	dbPort := "3306"
 
