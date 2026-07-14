@@ -6,16 +6,16 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/gorilla/mux"
-	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
 	fmt.Println("Starting up...")
 
-	r := mux.NewRouter()
+	r := gin.Default()
 	routes.RegisterItemRoutes(r)
 
 	http.Handle("/", r)
 	log.Fatal(http.ListenAndServe("localhost:9090", r))
+	// r.Run("localhost:9090")
 }

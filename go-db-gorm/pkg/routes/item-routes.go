@@ -3,14 +3,14 @@ package routes
 import (
 	"go-db-gorm/pkg/controllers"
 
-	"github.com/gorilla/mux"
+	"github.com/gin-gonic/gin"
 )
 
-var RegisterItemRoutes = func(router *mux.Router) {
-	router.HandleFunc("/item/", controllers.CreateItem).Methods("POST")
-	router.HandleFunc("/item/", controllers.GetItems).Methods("GET")
-	router.HandleFunc("/item/{itemId}", controllers.GetItemById).Methods("GET")
-	router.HandleFunc("/item/{itemId}", controllers.UpdateItem).Methods("PUT")
-	router.HandleFunc("/item/{itemId}", controllers.DeleteItem).Methods("DELETE")
+var RegisterItemRoutes = func(c *gin.Engine) {
 
+	c.GET("/item/", controllers.GetAllTodoItems)
+	c.GET("/item/{itemId}", controllers.GetTodoItemById)
+	c.POST("/item/", controllers.CreateItem)
+	c.PUT("/item/{itemId}", controllers.UpdateItem)
+	c.DELETE("/item/{itemId}", controllers.DeleteItem)
 }

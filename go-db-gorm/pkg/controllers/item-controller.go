@@ -5,110 +5,96 @@ import (
 	"fmt"
 	"go-db-gorm/pkg/models"
 	"go-db-gorm/pkg/utils"
+	"io"
+	"log"
 	"net/http"
 	"strconv"
 
-	"github.com/gorilla/mux"
+	"github.com/gin-gonic/gin"
 )
 
 var NewItem models.TodoItem
 
-func GetItems(w http.ResponseWriter, r *http.Request) {
-	newItems := models.GetAllItems()
-
+func GetAllTodoItems(c *gin.Context) {
+	newItems := models.GetAllTodoItems()
 	res, _ := json.Marshal(newItems)
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader((http.StatusOK))
-	w.Write(res)
+
+	c.IndentedJSON(http.StatusOK, res)
+	c.JSON(200, gin.H{
+		"items": res,
+	})
 }
 
-func GetItemById(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	itemId := vars["Id"]
+func GetTodoItemById(c *gin.Context) {
+	itemId := c.Query("id")
 	ID, err := strconv.ParseInt(itemId, 0, 0)
 
 	if err != nil {
 		fmt.Println(("Error parsing data."))
 	}
 
-	itemDetails, _ := models.GetItemById(ID)
+	itemDetails := models.GetTodoItemById(ID)
 	res, _ := json.Marshal(itemDetails)
 
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader((http.StatusOK))
-	w.Write(res)
+	c.JSON(200, gin.H{
+		"items": res,
+	})
 }
 
-func CreateItem(w http.ResponseWriter, r *http.Request) {
-	ItemCreator := &models.TodoItem{}
-	utils.ParseBody(r, ItemCreator)
+func CreateItem(c *gin.Context) {
+	itemCreator := &models.TodoItem{}
 
-	newItem := ItemCreator.CreateItem()
-	res, _ := json.Marshal(newItem)
-
-	w.WriteHeader((http.StatusOK))
-	w.Write(res)
-}
-
-func DeleteItem(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	itemId := vars["Id"]
-	ID, err := strconv.ParseInt(itemId, 0, 0)
-
+	jsonData, err := io.ReadAll(c.Request.Body)
 	if err != nil {
-		fmt.Println(("Error parsing data."))
+		log.Fatalf("Error reading body content: %v", err) // Maybe change this to return a http error code
 	}
 
-	deletedItem := models.DeleteItem(ID)
+	newTodoItem := itemCreator.CreateTodoItem()
 
-	res, _ := json.Marshal(deletedItem)
+	jsonErr := json.Unmarshal(jsonData, &newTodoItem)
+	if jsonErr != nil {
+		log.Fatalf("Error unmarshalling JSON: %v", jsonErr) // Maybe change this to return a http error code
+	}
 
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader((http.StatusOK))
-	w.Write(res)
+	res, _ := json.Marshal(newTodoItem)
+	c.JSON(200, gin.H{
+		"items": res,
+	})
 }
 
-func UpdateItem(w http.ResponseWriter, r *http.Request) {
+func UpdateItem(c *gin.Context) {
 	var updatedItem = &models.TodoItem{}
-	utils.ParseBody(r, updatedItem)
 
-	vars := mux.Vars(r)
-	itemId := vars["Id"]
+	itemId := c.Query("id")
 	ID, err := strconv.ParseInt(itemId, 0, 0)
 
 	if err != nil {
 		fmt.Println(("Error parsing data."))
 	}
 
-	// Get the item from the DB
-	itemDetails, db := models.GetItemById(ID)
-
-	// Update the info
-	if updatedItem.Title != itemDetails.Title {
-		itemDetails.Title = updatedItem.Title
-	}
-
-	if updatedItem.Description != itemDetails.Description {
-		itemDetails.Description = updatedItem.Description
-	}
-
-	if updatedItem.Date_due != itemDetails.Date_due {
-		itemDetails.Date_due = updatedItem.Date_due
-	}
-
-	if updatedItem.Date_added != itemDetails.Date_added {
-		itemDetails.Date_added = updatedItem.Date_added
-	}
-
-	if updatedItem.IsDone != itemDetails.IsDone {
-		itemDetails.IsDone = updatedItem.IsDone
-	}
-
-	db.Save(&itemDetails)
+	utils.ParseBody(c.Request, &updatedItem)
+	itemDetails := models.UpdateTodoItem(ID, updatedItem)
 
 	res, _ := json.Marshal(itemDetails)
+	c.JSON(200, gin.H{
+		"items": res,
+	})
+}
 
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader((http.StatusOK))
-	w.Write(res)
+func DeleteItem(c *gin.Context) {
+	// vars := mux.Vars(r)
+	// itemId := vars["Id"]
+	// ID, err := strconv.ParseInt(itemId, 0, 0)
+
+	// if err != nil {
+	// 	fmt.Println(("Error parsing data."))
+	// }
+
+	// deletedItem := models.DeleteItem(ID)
+
+	// res, _ := json.Marshal(deletedItem)
+
+	// w.Header().Set("Content-Type", "application/json")
+	// w.WriteHeader((http.StatusOK))
+	// w.Write(res)
 }

@@ -1,20 +1,42 @@
 package config
 
 import (
-	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"fmt"
+
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 var db *gorm.DB
 
-func Connect() {
-	d, err := gorm.Open("mysql", "appUser:appUser@12@/simpleTodo?charset=utf8&parseTime=True&loc=Local")
+func CreateDBConnection() error {
+	dbUsername := "root"
+	dbPassword := "root"
+	dbName := "gorm"
+	dbHost := "localhost"
+	dbPort := "3306"
+
+	// dbUsername := getEnv("DB_USERNAME", "root")
+	// dbPassword := getEnv("DB_PASSWORD", "")
+	// dbName := getEnv("DB_NAME", "TodoItems")
+	// dbHost := getEnv("DB_HOST", "localhost")
+	// dbPort := getEnv("DB_PORT", "3306")
+
+	// Example of mysql dsn
+	// "root:root@tcp(127.0.0.1:3306)/TodoItems?parseTime=true&loc=Local"
+	connectionString := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true&loc=Local", dbUsername, dbPassword, dbHost, dbPort, dbName)
+
+	database, err := gorm.Open(mysql.Open(connectionString), &gorm.Config{
+		Logger: logger.Default.LogMode(logger.Info), // Enable logging for debugging
+	})
 
 	if err != nil {
-		panic(err)
+		return err
 	}
 
-	db = d
+	db = database
+	return nil
 }
 
 func GetDB() *gorm.DB {
