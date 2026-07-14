@@ -26,23 +26,22 @@ func GetAllTodoItems(c *gin.Context) {
 
 	if err != nil {
 		c.IndentedJSON(http.StatusNoContent, "No rows in result")
-		c.JSON(200, gin.H{
-			"items": newItems,
-		})
+
+		// This or that ^, not both since you will respond with everything twince if you do
+		// c.JSON(200, gin.H{
+		// 	"items": newItems,
+		// })
 
 		return
 	}
 
-	res, _ := json.Marshal(newItems)
-
-	c.IndentedJSON(http.StatusOK, res)
-	c.JSON(200, gin.H{
-		"items": res,
-	})
+	if newItems != nil {
+		c.IndentedJSON(http.StatusOK, newItems)
+	}
 }
 
 func GetTodoItemById(c *gin.Context) {
-	itemId := c.Query("id")
+	itemId := c.Param("itemId")
 	ID, err := strconv.ParseInt(itemId, 0, 0)
 
 	if err != nil {
@@ -50,10 +49,10 @@ func GetTodoItemById(c *gin.Context) {
 	}
 
 	itemDetails := models.GetTodoItemById(ID)
-	res, _ := json.Marshal(itemDetails)
+	// res, _ := json.Marshal(itemDetails) // No need to Marshal the result, Gin handles this.
 
 	c.JSON(200, gin.H{
-		"items": res,
+		"items": itemDetails,
 	})
 }
 
@@ -72,16 +71,16 @@ func CreateItem(c *gin.Context) {
 		log.Fatalf("Error unmarshalling JSON: %v", jsonErr) // Maybe change this to return a http error code
 	}
 
-	res, _ := json.Marshal(newTodoItem)
+	// res, _ := json.Marshal(newTodoItem)
 	c.JSON(200, gin.H{
-		"items": res,
+		"items": newTodoItem,
 	})
 }
 
 func UpdateItem(c *gin.Context) {
 	var updatedItem = &models.TodoItem{}
 
-	itemId := c.Query("id")
+	itemId := c.Param("itemId")
 	ID, err := strconv.ParseInt(itemId, 0, 0)
 
 	if err != nil {
@@ -98,6 +97,7 @@ func UpdateItem(c *gin.Context) {
 }
 
 func DeleteItem(c *gin.Context) {
+	// itemId := c.Param("itemId")
 	// vars := mux.Vars(r)
 	// itemId := vars["Id"]
 	// ID, err := strconv.ParseInt(itemId, 0, 0)

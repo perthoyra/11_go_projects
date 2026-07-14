@@ -1,9 +1,9 @@
 package models
 
 import (
-	"database/sql"
 	"fmt"
 	"go-db-gorm/pkg/config"
+	"log"
 	"time"
 
 	"gorm.io/gorm"
@@ -20,37 +20,51 @@ type TodoItem struct {
 	// DeletedAt gorm.DeletedAt `gorm:"index"
 	// So we can use gorm.Model to get these by default in each entity
 
-	Id          int64          `gorm:"primarykey json:id"`
-	Title       sql.NullString `json:"title"`
-	Description sql.NullString `json:"description"`
-	DueAt       sql.NullTime   `json:"date_due"`
-	CreatedAt   time.Time      `json:"date_added"`
-	UpdatedAt   time.Time      `json:"date_updated"`
-	IsDone      bool           `j́son:"isdone"`
+	Id          int64     `gorm:"primarykey json:id"`
+	Title       string    `json:"title"`
+	Description string    `json:"description"`
+	DueAt       string    `json:"date_due"`
+	CreatedAt   time.Time `json:"date_added"`
+	UpdatedAt   time.Time `json:"date_updated"`
+	IsDone      bool      `j́son:"isdone"`
 }
 
 func init() {
 	fmt.Println("Initializing entities...")
+
 	config.CreateDBConnection()
-	db := config.GetDB()
-	db.AutoMigrate(&TodoItem{})
+	db = config.GetDB()
+
+	err := db.AutoMigrate(&TodoItem{})
+	if err != nil {
+		log.Fatalf("Failed automigrate(): %s", err)
+	}
 }
 
 // Using non generic version here to keep it simple
 
 func (item *TodoItem) CreateTodoItem() *TodoItem {
+	fmt.Println("Trying CreateTodoItem()")
 	db.Create(&item)
 	return item
 }
 
 func GetAllTodoItems() ([]TodoItem, error) {
-	var Items []TodoItem
-	res := db.Find(&Items)
+	fmt.Println("Trying GetAllTodoItems()")
+
+	var listItems []TodoItem
+
+	if db == nil {
+		fmt.Printf("INvalid database reference.")
+	}
+
+	res := db.Find(&listItems)
 
 	if res.Error != nil {
+		fmt.Printf("DB Error: %s", res.Error)
 		return nil, res.Error
 	}
-	return Items, nil
+	return listItems, nil
 }
 
 func GetTodoItemById(Id int64) *TodoItem {

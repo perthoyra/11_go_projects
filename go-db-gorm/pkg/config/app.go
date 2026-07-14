@@ -11,11 +11,11 @@ import (
 
 var db *gorm.DB
 
-func CreateDBConnection() error {
+func CreateDBConnection() {
 	dbUsername := "todouser"
 	dbPassword := "todouser"
 	dbName := "TodoDB"
-	dbHost := "192.168.50.57"
+	dbHost := "t14.intranet.local"
 	dbPort := "3306"
 
 	// dbUsername := getEnv("DB_USERNAME", "root")
@@ -28,23 +28,19 @@ func CreateDBConnection() error {
 	// "root:root@tcp(127.0.0.1:3306)/TodoItems?parseTime=true&loc=Local"
 	connectionString := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true&loc=Local", dbUsername, dbPassword, dbHost, dbPort, dbName)
 
-	database, err := gorm.Open(mysql.Open(connectionString), &gorm.Config{
+	var dbErr error
+	db, dbErr = gorm.Open(mysql.Open(connectionString), &gorm.Config{
 		Logger: logger.Default.LogMode(logger.Info), // Enable logging for debugging
 	})
 
-	if err != nil {
-		log.Fatalf("Failed to connect to the database: %s", err)
-		return err
+	if dbErr != nil {
+		log.Fatalf("Failed to connect to the database: %s", dbErr)
+		return
 	}
 
-	db = database
-	return nil
+	fmt.Printf("Database: %s", db.Name())
 }
 
 func GetDB() *gorm.DB {
 	return db
-}
-
-func init() {
-	fmt.Println("Configuring connections...")
 }
