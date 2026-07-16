@@ -18,6 +18,12 @@ func CreateDBConnection() {
 	dbHost := "t14.intranet.local"
 	dbPort := "3306"
 
+	// dbHostx := utils.GetEnvValue("DB_HOST")
+
+	// if dbHostx != ""{
+	// 	dbHost = dbHostx
+	// }
+
 	// dbUsername := getEnv("DB_USERNAME", "root")
 	// dbPassword := getEnv("DB_PASSWORD", "")
 	// dbName := getEnv("DB_NAME", "TodoItems")

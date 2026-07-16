@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
+	"os"
 )
 
 func ParseBody(r *http.Request, x interface{}) {
@@ -12,4 +13,8 @@ func ParseBody(r *http.Request, x interface{}) {
 			return
 		}
 	}
+}
+
+func GetEnvValue(key string) string {
+	return os.Getenv(key)
 }
