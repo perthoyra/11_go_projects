@@ -55,7 +55,7 @@ func GetAllTodoItems() ([]TodoItem, error) {
 	var listItems []TodoItem
 
 	if db == nil {
-		fmt.Printf("INvalid database reference.")
+		fmt.Printf("Invalid database reference.")
 	}
 
 	res := db.Find(&listItems)
