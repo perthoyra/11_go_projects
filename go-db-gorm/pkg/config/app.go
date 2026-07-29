@@ -15,7 +15,7 @@ func CreateDBConnection() {
 	dbUsername := "todouser"
 	dbPassword := "todouser"
 	dbName := "TodoDB"
-	dbHost := "t14.intranet.local"
+	dbHost := "localhost"
 	dbPort := "3306"
 
 	// dbHostx := utils.GetEnvValue("DB_HOST")
