@@ -75,7 +75,8 @@ func GetTodoItemById(Id int64) *TodoItem {
 
 func DeleteTodoItem(Id int64) TodoItem {
 	var item TodoItem
-	db.Where("ID = ?", Id).Delete(&item)
+	db.First(&item, Id)
+	db.Delete(&item)
 	return item
 }
 

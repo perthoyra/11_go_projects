@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"go-db-gorm/pkg/models"
-	"go-db-gorm/pkg/utils"
 	"io"
 	"log"
 	"net/http"
@@ -76,8 +75,8 @@ func CreateItem(c *gin.Context) {
 }
 
 func UpdateItem(c *gin.Context) {
-	var updatedItem = &models.TodoItem{}
 
+	// Read values from the request
 	itemId := c.Param("itemId")
 	ID, err := strconv.ParseInt(itemId, 0, 0)
 
@@ -85,42 +84,44 @@ func UpdateItem(c *gin.Context) {
 		fmt.Println(("Error parsing data."))
 	}
 
-	utils.ParseBody(c.Request, &updatedItem)
+	// Get the expected json data
+	jsonData, err := io.ReadAll(c.Request.Body)
+	if err != nil {
+		log.Fatalf("Error reading body content: %v", err) // Maybe change this to return a http error code
+	}
 
-	// Source - https://stackoverflow.com/a/61920252
-	// Posted by chash, modified by community. See post 'Timeline' for change history
-	// Retrieved 2026-07-14, License - CC BY-SA 4.0
+	// find the existing item
+	updatedItem := models.GetTodoItemById(ID)
 
-	// jsonData, err := io.ReadAll(c.Request.Body)
-	// if err != nil {
-	// 	// Handle error
-	// }
+	// Update the item
+	jsonErr := json.Unmarshal(jsonData, &updatedItem)
+	if jsonErr != nil {
+		log.Fatalf("Error unmarshalling JSON: %v", jsonErr) // Maybe change this to return a http error code
+	}
 
-	// json.Unmarshal(jsonData, &updatedItem)
-
+	// Persist the changes to the DB
 	itemDetails := models.UpdateTodoItem(ID, updatedItem)
 
-	// res, _ := json.Marshal(itemDetails)
 	c.JSON(http.StatusOK, gin.H{
 		"items": itemDetails,
 	})
 }
 
 func DeleteItem(c *gin.Context) {
-	// itemId := c.Param("itemId")
-	// vars := mux.Vars(r)
-	// itemId := vars["Id"]
-	// ID, err := strconv.ParseInt(itemId, 0, 0)
 
-	// if err != nil {
-	// 	fmt.Println(("Error parsing data."))
-	// }
+	// Read values from the request
+	itemId := c.Param("itemId")
+	ID, err := strconv.ParseInt(itemId, 0, 0)
 
-	// deletedItem := models.DeleteItem(ID)
+	if err != nil {
+		fmt.Println(("Error parsing data."))
+	}
+
+	deletedItem := models.DeleteTodoItem(ID)
 
 	// res, _ := json.Marshal(deletedItem)
 
-	// w.Header().Set("Content-Type", "application/json")
-	// w.WriteHeader((http.StatusOK))
-	// w.Write(res)
+	c.JSON(http.StatusOK, gin.H{
+		"items": deletedItem,
+	})
 }
