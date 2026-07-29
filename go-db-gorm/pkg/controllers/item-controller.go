@@ -68,8 +68,10 @@ func CreateItem(c *gin.Context) {
 		log.Fatalf("Error unmarshalling JSON: %v", jsonErr) // Maybe change this to return a http error code
 	}
 
+	itemDetails := models.UpdateTodoItem(newTodoItem.Id, newTodoItem)
+
 	c.JSON(http.StatusOK, gin.H{
-		"items": newTodoItem,
+		"items": itemDetails,
 	})
 }
 

@@ -1,0 +1,16 @@
+### Get list of items
+GET http://localhost:9090/v1/item
+
+
+### Create new todo
+POST http://localhost:9090/v1/item
+Content-Type: application/json; charset=utf-8
+
+{
+    "title": "Test title 2",
+    "description": "Test description 2",
+    "date_due": "2026-08-30 00:00:00.000",
+    "date_added": "2026-07-29T00:00:00+02:00",
+    "date_updated": "2026-07-29T00:00:00+02:00",
+    "IsDone": false
+}
