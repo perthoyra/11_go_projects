@@ -26,12 +26,6 @@ func GetAllTodoItems(c *gin.Context) {
 
 	if err != nil {
 		c.IndentedJSON(http.StatusNoContent, "No rows in result")
-
-		// This or that ^, not both since you will respond with everything twince if you do
-		// c.JSON(200, gin.H{
-		// 	"items": newItems,
-		// })
-
 		return
 	}
 
@@ -46,12 +40,15 @@ func GetTodoItemById(c *gin.Context) {
 
 	if err != nil {
 		fmt.Println(("Error parsing data."))
+
+		c.JSON(http.StatusUnprocessableEntity, gin.H{
+			"error": err,
+		})
 	}
 
 	itemDetails := models.GetTodoItemById(ID)
-	// res, _ := json.Marshal(itemDetails) // No need to Marshal the result, Gin handles this.
 
-	c.JSON(200, gin.H{
+	c.JSON(http.StatusOK, gin.H{
 		"items": itemDetails,
 	})
 }
@@ -71,8 +68,7 @@ func CreateItem(c *gin.Context) {
 		log.Fatalf("Error unmarshalling JSON: %v", jsonErr) // Maybe change this to return a http error code
 	}
 
-	// res, _ := json.Marshal(newTodoItem)
-	c.JSON(200, gin.H{
+	c.JSON(http.StatusOK, gin.H{
 		"items": newTodoItem,
 	})
 }
@@ -88,11 +84,23 @@ func UpdateItem(c *gin.Context) {
 	}
 
 	utils.ParseBody(c.Request, &updatedItem)
+
+	// Source - https://stackoverflow.com/a/61920252
+	// Posted by chash, modified by community. See post 'Timeline' for change history
+	// Retrieved 2026-07-14, License - CC BY-SA 4.0
+
+	// jsonData, err := io.ReadAll(c.Request.Body)
+	// if err != nil {
+	// 	// Handle error
+	// }
+
+	// json.Unmarshal(jsonData, &updatedItem)
+
 	itemDetails := models.UpdateTodoItem(ID, updatedItem)
 
-	res, _ := json.Marshal(itemDetails)
-	c.JSON(200, gin.H{
-		"items": res,
+	// res, _ := json.Marshal(itemDetails)
+	c.JSON(http.StatusOK, gin.H{
+		"items": itemDetails,
 	})
 }
 
