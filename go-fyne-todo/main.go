@@ -46,7 +46,12 @@ func main() {
 
 	// controllers.LoadTodoItemList(&TodoList)
 
+	// create the user controls we want in the window
 	t := models.AddTodoItem("Remember me", "Show this on the window", false)
+
+	title_text := container.NewCenter(
+		widget.NewLabel(t.String()),
+	)
 
 	add_btn := widget.NewButton("Add", func() {
 		fmt.Println("Add was clicked!")
@@ -78,9 +83,7 @@ func main() {
 		entry,
 		nil,
 		nil,
-		container.NewCenter(
-			widget.NewLabel(t.String()),
-		),
+		title_text,
 	)
 
 	main_window.SetContent(main_body)
