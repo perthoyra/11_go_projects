@@ -1,6 +1,9 @@
 package models
 
-import "time"
+import (
+	"fmt"
+	"time"
+)
 
 type TodoItem struct {
 	Id          int64     `json:id"`
@@ -21,8 +24,8 @@ func GetTodoItemById(id int64) TodoItem {
 	return item
 }
 
-func AddTodoItem() TodoItem {
-	var item TodoItem
+func AddTodoItem(title string, description string, isdone bool) TodoItem {
+	item := TodoItem{Title: title, Description: description, IsDone: isdone, CreatedAt: time.Now()}
 	return item
 }
 
@@ -57,4 +60,8 @@ func UpdateTodoItemDetails(existingItem *TodoItem, updatedItem *TodoItem) {
 	}
 
 	existingItem.UpdatedAt = time.Now()
+}
+
+func (t TodoItem) String() string {
+	return fmt.Sprintf("%s  - %t", t.Description, t.IsDone)
 }

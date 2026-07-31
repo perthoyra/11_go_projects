@@ -1,7 +1,7 @@
 package main
 
 import (
-	"go-fyne-todo/controllers"
+	"fmt"
 	"go-fyne-todo/models"
 
 	"fyne.io/fyne/v2"
@@ -38,31 +38,46 @@ func ShowEditWindow(a fyne.App, w fyne.Window) {
 func main() {
 	a := app.New()
 	main_window := a.NewWindow("TODO App")
+	main_window.Resize(fyne.NewSize(300, 400))
 
-	controllers.LoadTodoItemList(&TodoList)
+	// controllers.LoadTodoItemList(&TodoList)
 
-	main_window.SetContent(widget.NewLabel("TODOs will go here"))
+	t := models.AddTodoItem("Remember me", "Show this on the window", false)
 
-	welcome_text := widget.NewLabel("Welcome to your todo list!")
-
-	newButton := widget.NewButton("New", func() {
-		main_window.Hide()
-		ShowEditWindow(a, main_window)
+	add_btn := widget.NewButton("Add", func() {
+		fmt.Println("Add was clicked!")
 	})
-	editButton := widget.NewButton("New", func() {
-		main_window.Hide()
-		ShowEditWindow(a, main_window)
-	})
-	deleteButton := widget.NewButton("New", func() {
-		main_window.Hide()
-		ShowEditWindow(a, main_window)
-	})
+	add_btn.Disable()
 
-	main_body := container.NewVSplit(welcome_text, container.NewHBox(
-		newButton,
-		editButton,
-		deleteButton,
-	))
+	newTodoDesc := widget.NewEntry()
+	newTodoDesc.PlaceHolder = "New Todo goes here..."
+	newTodoDesc.OnChanged = func(s string) {
+		add_btn.Disable()
+
+		if len(s) >= 3 {
+			add_btn.Enable()
+		}
+	}
+
+	entry := container.NewBorder(
+		nil, // TOP
+		nil, // BOTTOM
+		nil, // Left
+		// RIGHT ↓
+		add_btn,
+		// take the rest of the space
+		newTodoDesc,
+	)
+
+	main_body := container.NewBorder(
+		nil,
+		entry,
+		nil,
+		nil,
+		container.NewCenter(
+			widget.NewLabel(t.String()),
+		),
+	)
 
 	main_window.SetContent(main_body)
 
