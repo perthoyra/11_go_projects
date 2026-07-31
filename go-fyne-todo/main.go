@@ -13,8 +13,9 @@ import (
 
 var TodoList []models.TodoItem
 
-func ShowEditWindow(a fyne.App, w fyne.Window) {
+func ShowEditWindow(a fyne.App, w fyne.Window) models.TodoItem {
 	edit_win := a.NewWindow("Edit todo")
+	var result models.TodoItem
 
 	title_entry := widget.NewEntry()
 	title_entry.SetPlaceHolder("Enter title")
@@ -24,6 +25,7 @@ func ShowEditWindow(a fyne.App, w fyne.Window) {
 		dialog.ShowInformation("Hello", "Hello, "+name+"!", edit_win)
 		edit_win.Hide()
 		w.Show()
+		result = models.TodoItem{Title: "Test 1", Description: "Description 1"}
 	})
 
 	edit_win.SetContent(container.NewVBox(
@@ -33,6 +35,8 @@ func ShowEditWindow(a fyne.App, w fyne.Window) {
 
 	edit_win.Show()
 	w.Hide()
+
+	return result
 }
 
 func main() {
