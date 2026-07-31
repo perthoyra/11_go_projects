@@ -13,7 +13,7 @@ import (
 
 var TodoList []models.TodoItem
 
-func ShowEditWindow(a fyne.App, w fyne.Window) fyne.Window {
+func ShowEditWindow(a fyne.App, w fyne.Window) {
 	edit_win := a.NewWindow("Edit todo")
 
 	title_entry := widget.NewEntry()
@@ -42,9 +42,31 @@ func main() {
 	controllers.LoadTodoItemList(&TodoList)
 
 	main_window.SetContent(widget.NewLabel("TODOs will go here"))
-	main_window.Show()
 
-	// ShowEditWindow(a, main_window)
+	welcome_text := widget.NewLabel("Welcome to your todo list!")
+
+	newButton := widget.NewButton("New", func() {
+		main_window.Hide()
+		ShowEditWindow(a, main_window)
+	})
+	editButton := widget.NewButton("New", func() {
+		main_window.Hide()
+		ShowEditWindow(a, main_window)
+	})
+	deleteButton := widget.NewButton("New", func() {
+		main_window.Hide()
+		ShowEditWindow(a, main_window)
+	})
+
+	main_body := container.NewVSplit(welcome_text, container.NewHBox(
+		newButton,
+		editButton,
+		deleteButton,
+	))
+
+	main_window.SetContent(main_body)
+
+	main_window.Show()
 
 	a.Run()
 }
