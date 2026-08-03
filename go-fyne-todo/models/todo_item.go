@@ -15,6 +15,19 @@ type TodoItem struct {
 	IsDone      bool      `j́son:"isdone"`
 }
 
+func (todo *TodoItem) CreateTodoItem() *TodoItem {
+	var newItem TodoItem
+
+	newItem.CreatedAt = time.Now()
+	newItem.Description = ""
+	newItem.IsDone = false
+	newItem.Title = ""
+	newItem.UpdatedAt = time.Now()
+
+	todo = &newItem
+	return todo
+}
+
 func LoadTodoItemList(todoItemList *[]TodoItem) {
 	// Call rest api with a GET here!
 }

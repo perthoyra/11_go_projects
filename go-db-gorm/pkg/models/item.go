@@ -85,7 +85,7 @@ func UpdateTodoItem(Id int64, updatedItem *TodoItem) *TodoItem {
 	itemDetails := GetTodoItemById(Id)
 
 	if itemDetails != nil {
-		UpdateTodoItemDetails(itemDetails, updatedItem)
+		updateTodoItemDetails(itemDetails, updatedItem)
 
 		db.Save(&itemDetails)
 
@@ -95,7 +95,7 @@ func UpdateTodoItem(Id int64, updatedItem *TodoItem) *TodoItem {
 	return nil
 }
 
-func UpdateTodoItemDetails(existingItem *TodoItem, updatedItem *TodoItem) {
+func updateTodoItemDetails(existingItem *TodoItem, updatedItem *TodoItem) {
 	// // Update the info
 	if updatedItem.Title != existingItem.Title {
 		existingItem.Title = updatedItem.Title

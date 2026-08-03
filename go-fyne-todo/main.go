@@ -1,94 +1,26 @@
 package main
 
 import (
-	"fmt"
 	"go-fyne-todo/models"
+	"go-fyne-todo/views"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
-	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/dialog"
-	"fyne.io/fyne/v2/widget"
 )
 
 var TodoList []models.TodoItem
 
-func ShowEditWindow(a fyne.App, w fyne.Window) models.TodoItem {
-	edit_win := a.NewWindow("Edit todo")
-	var result models.TodoItem
-
-	title_entry := widget.NewEntry()
-	title_entry.SetPlaceHolder("Enter title")
-
-	submitButton := widget.NewButton("Submit", func() {
-		name := title_entry.Text
-		dialog.ShowInformation("Hello", "Hello, "+name+"!", edit_win)
-		edit_win.Hide()
-		w.Show()
-		result = models.TodoItem{Title: "Test 1", Description: "Description 1"}
-	})
-
-	edit_win.SetContent(container.NewVBox(
-		title_entry,
-		submitButton,
-	))
-
-	edit_win.Show()
-	w.Hide()
-
-	return result
-}
-
 func main() {
-	a := app.New()
-	main_window := a.NewWindow("TODO App")
+	app := app.New()
+	main_window := app.NewWindow("TODO App")
 	main_window.Resize(fyne.NewSize(300, 400))
 
+	TodoList = make([]models.TodoItem, 0)
+
 	// controllers.LoadTodoItemList(&TodoList)
-
-	// create the user controls we want in the window
-	t := models.AddTodoItem("Remember me", "Show this on the window", false)
-
-	title_text := container.NewCenter(
-		widget.NewLabel(t.String()),
-	)
-
-	add_btn := widget.NewButton("Add", func() {
-		fmt.Println("Add was clicked!")
-	})
-	add_btn.Disable()
-
-	newTodoDesc := widget.NewEntry()
-	newTodoDesc.PlaceHolder = "New Todo goes here..."
-	newTodoDesc.OnChanged = func(s string) {
-		add_btn.Disable()
-
-		if len(s) >= 3 {
-			add_btn.Enable()
-		}
-	}
-
-	entry := container.NewBorder(
-		nil, // TOP
-		nil, // BOTTOM
-		nil, // Left
-		// RIGHT ↓
-		add_btn,
-		// take the rest of the space
-		newTodoDesc,
-	)
-
-	main_body := container.NewBorder(
-		nil,
-		entry,
-		nil,
-		nil,
-		title_text,
-	)
-
-	main_window.SetContent(main_body)
+	views.CreateMainWindow(&app, &main_window, &TodoList)
 
 	main_window.Show()
 
-	a.Run()
+	app.Run()
 }
