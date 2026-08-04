@@ -14,6 +14,7 @@ func showTodoList(data binding.List[any]) *widget.List {
 		// the binding list with the data
 		data,
 		// func that returns the component structure of the List Item
+		// this is the template all items will follow
 		func() fyne.CanvasObject {
 			return container.NewBorder(
 				nil, nil, nil,
@@ -32,8 +33,9 @@ func showTodoList(data binding.List[any]) *widget.List {
 			l := ctr.Objects[0].(*widget.Label)
 			c := ctr.Objects[1].(*widget.Check)
 
-			diu, _ := di.(binding.Untyped).Get()
-			todo := diu.(models.TodoItem)
+			// diu, _ := di.(binding.Untyped).Get()
+			// todo := diu.(models.TodoItem)
+			todo := models.NewTodoFromDataItem(di)
 
 			l.SetText(todo.Description)
 			c.SetChecked(todo.IsDone)

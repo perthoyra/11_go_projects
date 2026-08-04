@@ -1,8 +1,14 @@
 package models
 
 import (
+	"encoding/json"
 	"fmt"
+	"go-fyne-todo/config"
+	"go-fyne-todo/restclient"
+	"log"
 	"time"
+
+	"fyne.io/fyne/v2/data/binding"
 )
 
 type TodoItem struct {
@@ -13,6 +19,14 @@ type TodoItem struct {
 	CreatedAt   time.Time `json:"date_added"`
 	UpdatedAt   time.Time `json:"date_updated"`
 	IsDone      bool      `j́son:"isdone"`
+}
+
+var app_config config.AppConfig
+
+func init() {
+	config_creator := &config.AppConfig{}
+
+	app_config = *config_creator.CreateConfig()
 }
 
 func (todo *TodoItem) CreateTodoItem() *TodoItem {
@@ -28,8 +42,21 @@ func (todo *TodoItem) CreateTodoItem() *TodoItem {
 	return todo
 }
 
+// this is added here just to clean up the ui functions a bit
+func NewTodoFromDataItem(di binding.DataItem) TodoItem {
+	v, _ := di.(binding.Untyped).Get()
+	return v.(TodoItem)
+}
+
 func LoadTodoItemList(todoItemList *[]TodoItem) {
-	// Call rest api with a GET here!
+	responseData := restclient.Get(&app_config, "item")
+
+	var responseObject []TodoItem
+	if err := json.Unmarshal(responseData, &responseObject); err != nil {
+		log.Fatal(err)
+	}
+
+	todoItemList = &responseObject
 }
 
 func GetTodoItemById(id int64) TodoItem {

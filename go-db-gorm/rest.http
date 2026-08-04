@@ -1,11 +1,11 @@
 ### Get list of items
-GET http://localhost:9090/v1/item
+GET http://localhost:9090/api/v1/item
 
 ### Get specific item
-GET http://localhost:9090/v1/item/1
+GET http://localhost:9090/api/v1/item/1
 
 ### Create new todo
-POST http://localhost:9090/v1/item
+POST http://localhost:9090/api/v1/item
 Content-Type: application/json; charset=utf-8
 
 {
@@ -18,7 +18,7 @@ Content-Type: application/json; charset=utf-8
 }
 
 ### Update todo
-PUT http://localhost:9090/v1/item/4
+PUT http://localhost:9090/api/v1/item/4
 Content-Type: application/json; charset=utf-8
 
 {
@@ -32,5 +32,5 @@ Content-Type: application/json; charset=utf-8
 }
 
 ### Delete todo
-DELETE http://localhost:9090/v1/item/4
+DELETE http://localhost:9090/api/v1/item/4
 Content-Type: application/json; charset=utf-8

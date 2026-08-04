@@ -12,7 +12,7 @@ var RegisterItemRoutes = func(c *gin.Engine) {
 	// Should result in routes looking like '../v1/item/'
 	// Add more groups below this if needed, ie v2, v3 etc
 	{
-		v1 := c.Group("/v1")
+		v1 := c.Group("/api/v1")
 		v1.GET("/item", controllers.GetAllTodoItems)
 		v1.GET("/item/:itemId", controllers.GetTodoItemById)
 		v1.POST("/item", controllers.CreateItem)
